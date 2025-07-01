@@ -31,7 +31,7 @@ const __dirname = path.dirname(__filename);
 // Middleware ---------------------------------------------------------------------
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: process.env.FRONTEND_URL, // 👈 dynamic origin
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
