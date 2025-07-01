@@ -102,7 +102,7 @@ export default function EncryptPage() {
 
   const checkAuth = async () => {
     const token = localStorage.getItem("token");
-    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "https://lake.onrender.com";
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL ;
 
     if (!token) {
       console.warn("No token found in localStorage.");
