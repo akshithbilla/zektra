@@ -134,6 +134,8 @@ export default function MyVaultPage() {
       alert(err.response?.data?.message || "Failed to download file");
     }
   };
+const isAndroid = /Android/i.test(navigator.userAgent);
+const googleDocsUrl = `https://docs.google.com/gview?embedded=true&url=${encodeURIComponent(previewContent)}`;
 
   const handleDeleteFile = async (fileId) => {
     try {
@@ -464,11 +466,11 @@ export default function MyVaultPage() {
                       className="max-w-full max-h-[70vh] mx-auto"
                     />
                   ) : previewFile?.contentType?.includes('pdf') || previewFile?.type?.includes('pdf') ? (
-                    <iframe 
-                      src={previewContent} 
-                      title={previewFile.name}
-                      className="w-full h-[70vh] border-none"
-                    />
+                   <iframe
+  src={isAndroid ? googleDocsUrl : previewContent}
+  title={previewFile.name}
+  className="w-full h-[70vh] border-none"
+/>
                   ) : previewFile?.contentType?.includes('text') || previewFile?.type?.includes('text') ? (
                     <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded overflow-auto max-h-[65vh]">
                       {previewContent}
