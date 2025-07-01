@@ -13,7 +13,8 @@ import AboutPage from "@/pages/about";
 import { Navbar } from "./components/navbar";
 import LoginPage from "./auth/LoginPage";
 import SignupPage from "./auth/SignupPage";
-import PageNotFound from "./config/pagenotfound";
+import PageNotFound from './config/PageNotFound.jsx';
+
 import ProtectedRoute from "./components/Layout/ProtectedRoute.tsx";
 import PublicOnlyRoute from "./components/Layout/PublicOnlyRoute";
 
