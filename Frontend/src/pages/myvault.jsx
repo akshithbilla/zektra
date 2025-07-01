@@ -24,6 +24,7 @@ import { title, subtitle } from "@/components/primitives";
 import DefaultLayout from "@/layouts/default";
 import axios from "axios";
 import { useNavigate } from 'react-router-dom';
+import ModalBodyWithReactPDF from "./ModalBodyWithReactPDF"
 
 const categoryIcons = {
   "payment-wallet": (
@@ -453,51 +454,13 @@ const googleDocsUrl = `https://docs.google.com/gview?embedded=true&url=${encodeU
                   {previewFile?.type || previewFile?.contentType}
                 </p>
               </ModalHeader>
-              <ModalBody>
-                {isPreviewLoading ? (
-                  <div className="flex items-center justify-center h-64">
-                    <Spinner size="lg" />
-                  </div>
-                ) : previewContent ? (
-                  previewFile?.contentType?.includes('image') || previewFile?.type?.includes('image') ? (
-                    <img 
-                      src={previewContent} 
-                      alt={previewFile.name} 
-                      className="max-w-full max-h-[70vh] mx-auto"
-                    />
-                  ) : previewFile?.contentType?.includes('pdf') || previewFile?.type?.includes('pdf') ? (
-                   <iframe
-  src={isAndroid ? googleDocsUrl : previewContent}
-  title={previewFile.name}
-  className="w-full h-[70vh] border-none"
+
+<ModalBodyWithReactPDF
+  isPreviewLoading={isPreviewLoading}
+  previewContent={previewContent}
+  previewFile={previewFile}
 />
-                  ) : previewFile?.contentType?.includes('text') || previewFile?.type?.includes('text') ? (
-                    <pre className="bg-gray-100 dark:bg-gray-800 p-4 rounded overflow-auto max-h-[65vh]">
-                      {previewContent}
-                    </pre>
-                  ) : (
-                    <div className="text-center py-12">
-                      <svg className="w-12 h-12 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                      <h4 className="text-lg font-medium mt-4">Preview not available</h4>
-                      <p className="text-default-500 mt-2">
-                        This file type cannot be previewed. Please download to view.
-                      </p>
-                    </div>
-                  )
-                ) : (
-                  <div className="text-center py-12">
-                    <svg className="w-12 h-12 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                    <h4 className="text-lg font-medium mt-4">Preview not available</h4>
-                    <p className="text-default-500 mt-2">
-                      This file type cannot be previewed. Please download to view.
-                    </p>
-                  </div>
-                )}
-              </ModalBody>
+
               <ModalFooter>
                 <Button 
                   size="sm" 
