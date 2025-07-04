@@ -193,15 +193,16 @@ const handleSubmit = async (event) => {
               Forgot password?
             </Link>
           </div>
-          <Button className="w-full" color="primary" type="submit" isLoading={loading}>
-            <span>Sign In</span>
-          </Button>
-        </Form>
-<ReCAPTCHA
+          <ReCAPTCHA
   ref={recaptchaRef}
   sitekey={SITE_KEY}
   className="my-2 rounded-md"
 />
+          <Button className="w-full" color="primary" type="submit" isLoading={loading}>
+            <span>Sign In</span>
+          </Button>
+        </Form>
+
 
         <div className="flex items-center gap-4 py-2">
           <Divider className="flex-1" />

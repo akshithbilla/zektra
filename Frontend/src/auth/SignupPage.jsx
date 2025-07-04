@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import {
   Button,
@@ -15,6 +15,9 @@ import {
   ModalFooter,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
+import ReCAPTCHA from "react-google-recaptcha";
+
+const SITE_KEY = "6LdzZ3crAAAAAAR0HO3Us161USFuGtUYxcrCm_rj"; // 🔑 Replace with your Google reCAPTCHA site key
 
 const SignupPage = () => {
   const [form, setForm] = useState({
@@ -32,6 +35,7 @@ const SignupPage = () => {
   const [resending, setResending] = useState(false);
   const [resentMsg, setResentMsg] = useState("");
 
+  const recaptchaRef = useRef(null); // 👈 reCAPTCHA reference
   const navigate = useNavigate();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -51,8 +55,29 @@ const SignupPage = () => {
       return;
     }
 
+    const token = await recaptchaRef.current?.getValue();
+    if (!token) {
+      setError("Please verify that you're not a robot.");
+      return;
+    }
+
     setLoading(true);
     try {
+      // 1. Verify reCAPTCHA token with backend
+      const captchaRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/verify-captcha`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
+
+      const captchaData = await captchaRes.json();
+      if (!captchaData.success) {
+        setError("reCAPTCHA verification failed.");
+        setLoading(false);
+        return;
+      }
+
+      // 2. Register user
       const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -65,7 +90,7 @@ const SignupPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setShowPopup(true); // Show the success popup
+        setShowPopup(true);
       } else {
         setError(data.message || "Registration failed");
       }
@@ -73,10 +98,10 @@ const SignupPage = () => {
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
+      recaptchaRef.current?.reset(); // reset CAPTCHA
     }
   };
 
-  // Resend verification link using email in form
   const handleResendVerification = async () => {
     setResending(true);
     setResentMsg("");
@@ -117,9 +142,7 @@ const SignupPage = () => {
           </p>
         </div>
 
-        {error && (
-          <p className="text-red-500 text-sm text-center">{error}</p>
-        )}
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
         <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
           <Input
@@ -152,11 +175,7 @@ const SignupPage = () => {
               <button type="button" onClick={toggleVisibility}>
                 <Icon
                   className="pointer-events-none text-2xl text-default-400"
-                  icon={
-                    isVisible
-                      ? "solar:eye-closed-linear"
-                      : "solar:eye-bold"
-                  }
+                  icon={isVisible ? "solar:eye-closed-linear" : "solar:eye-bold"}
                 />
               </button>
             }
@@ -175,9 +194,7 @@ const SignupPage = () => {
                 <Icon
                   className="pointer-events-none text-2xl text-default-400"
                   icon={
-                    isConfirmVisible
-                      ? "solar:eye-closed-linear"
-                      : "solar:eye-bold"
+                    isConfirmVisible ? "solar:eye-closed-linear" : "solar:eye-bold"
                   }
                 />
               </button>
@@ -196,6 +213,9 @@ const SignupPage = () => {
               Privacy Policy
             </Link>
           </Checkbox>
+
+          {/* 👇 reCAPTCHA widget */}
+          <ReCAPTCHA ref={recaptchaRef} sitekey={SITE_KEY} className="rounded-md" />
 
           <Button color="primary" type="submit" isDisabled={loading}>
             {loading ? "Registering..." : "Sign Up"}
@@ -220,18 +240,12 @@ const SignupPage = () => {
 
         <p className="text-center text-small">
           Already have an account?&nbsp;
-          <Link
-            as={RouterLink}
-            to="/login"
-            size="sm"
-            className="text-primary"
-          >
+          <Link as={RouterLink} to="/login" size="sm" className="text-primary">
             Log In
           </Link>
         </p>
       </div>
 
-      {/* Email Verification Popup */}
       <Modal
         isOpen={showPopup}
         onClose={handlePopupConfirm}
