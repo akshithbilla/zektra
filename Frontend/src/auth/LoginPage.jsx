@@ -2,6 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
+import ReCAPTCHA from "react-google-recaptcha";
+import { useRef } from "react";
+
+ // 🔑 From Google reCAPTCHA dashboard
+
 import { Button, Input, Checkbox, Link, Form, Divider } from "@heroui/react";
 import { Icon } from "@iconify/react";
 
@@ -13,10 +18,12 @@ const LoginPage = ({ setUser }) => {
   const [resending, setResending] = useState(false);
   const [resentMsg, setResentMsg] = useState("");
   const [loginEmail, setLoginEmail] = useState("");
+  const recaptchaRef = useRef(null);
+
   const navigate = useNavigate();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
-
+const SITE_KEY = "6LdzZ3crAAAAAAR0HO3Us161USFuGtUYxcrCm_rj";
   // Google OAuth: handle token in query string
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -41,43 +48,66 @@ const LoginPage = ({ setUser }) => {
     }
   }, [navigate, setUser]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setLoading(true);
-    setError('');
-    setShowResend(false);
-    setResentMsg("");
+const handleSubmit = async (event) => {
+  event.preventDefault();
+  setLoading(true);
+  setError('');
+  setShowResend(false);
+  setResentMsg("");
 
-    const formData = new FormData(event.target);
-    const email = formData.get('email');
-    const password = formData.get('password');
-    setLoginEmail(email);
+  const formData = new FormData(event.target);
+  const email = formData.get('email');
+  const password = formData.get('password');
+  setLoginEmail(email);
 
-    try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: email, password }),
-      });
+  const token = await recaptchaRef.current?.getValue();
+  if (!token) {
+    setError("Please verify that you're not a robot.");
+    setLoading(false);
+    return;
+  }
 
-      const data = await response.json();
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
-        setUser(data.user);
-        navigate('/dashboard');
-      } else {
-        // Detect "not verified" error from backend
-        if (data.message && data.message.toLowerCase().includes("not verified")) {
-          setShowResend(true);
-        }
-        setError(data.message || 'Login failed');
-      }
-    } catch (err) {
-      setError('An error occurred. Please try again.');
-    } finally {
+  try {
+    // 1. Verify reCAPTCHA token with your backend
+    const captchaRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/verify-captcha`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    });
+
+    const captchaData = await captchaRes.json();
+    if (!captchaData.success) {
+      setError("reCAPTCHA verification failed.");
       setLoading(false);
+      return;
     }
-  };
+
+    // 2. Proceed with actual login
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: email, password }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      localStorage.setItem('token', data.token);
+      setUser(data.user);
+      navigate('/dashboard');
+    } else {
+      if (data.message?.toLowerCase().includes("not verified")) {
+        setShowResend(true);
+      }
+      setError(data.message || 'Login failed');
+    }
+  } catch (err) {
+    setError('An error occurred. Please try again.');
+  } finally {
+    recaptchaRef.current?.reset(); // reset for next time
+    setLoading(false);
+  }
+};
+
 
   // Resend verification link (shared with Signup page)
   const handleResendVerification = async (emailParam) => {
@@ -167,6 +197,11 @@ const LoginPage = ({ setUser }) => {
             <span>Sign In</span>
           </Button>
         </Form>
+<ReCAPTCHA
+  ref={recaptchaRef}
+  sitekey={SITE_KEY}
+  className="my-2 rounded-md"
+/>
 
         <div className="flex items-center gap-4 py-2">
           <Divider className="flex-1" />

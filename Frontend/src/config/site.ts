@@ -16,19 +16,20 @@ export const siteConfig = {
       href: "/dashboard",
       icon: HomeIcon,
     },
-    {
-      label: " My Vault",
-      href: "/myvault",
-      icon: ServerIcon,
-    },
-    {
+        {
       label: "Encrypt",
       href: "/Encrypt",
       icon: ArrowUpTrayIcon ,
     },
     {
-      label: "Pricing",
-      href: "/pricing",
+      label: " My Vault",
+      href: "/myvault",
+      icon: ServerIcon,
+    },
+
+    {
+      label: "Upgarde",
+      href: "/upgrade",
       icon: CurrencyDollarIcon  ,
     },
     {/*
@@ -54,8 +55,9 @@ export const siteConfig = {
       href: "/blog",
     },
     {
-      label: "Pricing",
-      href: "/pricing",
+      label: "Upgarde",
+      href: "/upgrade",
+      icon: CurrencyDollarIcon  ,
     },
     {
       label: "Settings",

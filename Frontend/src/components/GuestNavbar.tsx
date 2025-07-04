@@ -29,16 +29,17 @@ export const GuestNavbar = () => {
     <HeroUINavbar maxWidth="xl" position="sticky">
       {/* Left - Brand & Nav Links */}
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        <NavbarBrand className="gap-3 max-w-fit">
-          <Link
-            className="flex justify-start items-center gap-1"
-            color="foreground"
-            href="/"
-          >
-            <img src={l} alt="VaultX Logo" style={{ width: "24px", height: "24px" }} />
-            <p className="font-bold text-inherit">VaultX</p>
-          </Link>
-        </NavbarBrand>
+       <NavbarBrand className="gap-2">
+  <Link className="flex items-center" href="/">
+    <img 
+      src={l} 
+      alt="VaultX Logo" 
+      className="w-8 h-8 object-contain" 
+      style={{ minWidth: "32px" }}
+    />
+    <span className="ml-2 font-bold text-xl text-gray-800 dark:text-white">Zektra</span>
+  </Link>
+</NavbarBrand>
         
       </NavbarContent>
 

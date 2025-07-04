@@ -132,7 +132,7 @@ function App() {
           }
         />
         <Route
-          path="/pricing"
+          path="/upgrade"
           element={
             <ProtectedRoute user={user}>
               <PricingPage />
