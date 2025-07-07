@@ -5,7 +5,7 @@ import Home from "./auth/Home";
 import VerifyEmailPage from './auth/VerifyEmailPage';
 import ForgotPasswordPage from './auth/ForgotPasswordPage';
 import ResetPasswordPage from './auth/ResetPasswordPage';
-import IndexPage from "@/pages/index";
+import IndexPage from "./pages/index";
 import Myvault from "./pages/myvault";
 import PricingPage from "@/pages/pricing";
 import EncryptSave from "@/pages/EncryptSave";

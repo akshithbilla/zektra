@@ -16,8 +16,8 @@ import folder from "./folder.png";
 import profile from "./profile.png";
 import credentials from "./credentials.png";
 import digital from "./digital.png"
-//import { ThemeSwitch } from "@/components/theme-switch";
 
+import { Link } from 'react-router-dom';
 export default function IndexPage() {
   const features = [
     {
@@ -106,12 +106,17 @@ export default function IndexPage() {
           </h2>
           
           <div className="mt-8 flex gap-4 justify-center">
-            <Button color="primary" size="lg" radius="full">
-              Get Started
-            </Button>
+            <Link to="/encrypt">
+  <Button color="primary" size="lg" radius="full">
+    Encrypt Now
+  </Button>
+</Link>
+
+<Link to="/myvault">
+
             <Button variant="flat" size="lg" radius="full">
-              Learn More
-            </Button>
+              My Vault
+            </Button></Link>
           </div>
         </div>
       </section>
