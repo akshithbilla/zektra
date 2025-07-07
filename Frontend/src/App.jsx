@@ -14,7 +14,7 @@ import { Navbar } from "./components/navbar";
 import LoginPage from "./auth/LoginPage";
 import SignupPage from "./auth/SignupPage";
 import PageNotFound from './config/PageNotFound.jsx';
-
+import Settings from "./pages/settings";
 import ProtectedRoute from "./components/Layout/ProtectedRoute.tsx";
 import PublicOnlyRoute from "./components/Layout/PublicOnlyRoute";
 
@@ -136,6 +136,14 @@ function App() {
           element={
             <ProtectedRoute user={user}>
               <PricingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute user={user}>
+              <Settings />
             </ProtectedRoute>
           }
         />
