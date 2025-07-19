@@ -45,7 +45,7 @@ const pricingPlans = [
   },
   {
     name: "Pro",
-    price: "$9",
+    price: "₹750",
     duration: "per month",
     description: "For power users and professionals",
     features: [
@@ -171,7 +171,7 @@ export default function PricingPage() {
               <div className="flex items-end gap-1 mt-2">
                 <span className="text-4xl font-bold dark:text-white">
                   {annualBilling && plan.price !== "Free" && plan.price !== "Custom" 
-                    ? `$${Math.floor(parseInt(plan.price.replace('$', '')) * 0.8 * 12)}`
+                    ? `₹${Math.floor(parseInt(plan.price.replace('₹', '')) * 0.8 * 12)}`
                     : plan.price}
                 </span>
                 {plan.price !== "Free" && plan.price !== "Custom" && (
@@ -300,7 +300,7 @@ export default function PricingPage() {
             },
             {
               question: "What payment methods do you accept?",
-              answer: "We accept all major credit cards, PayPal, and for Enterprise plans, we can do bank transfers."
+              answer: "We accept all major credit cards, UPI, NetBanking, PayPal, and for Enterprise plans, we can do bank transfers."
             },
             {
               question: "How secure is my data?",
