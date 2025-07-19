@@ -72,7 +72,7 @@ const pricingPlans = [
       "SSO integration",
       "Audit logs",
       "24/7 support",
-      "Dedicated account manager"
+      "Dedicated account managerr"
     ],
     color: "bg-green-500/10 dark:bg-green-400/10",
     popular: false
