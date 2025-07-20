@@ -133,7 +133,7 @@ export default function Guest() {
     },
     {
       name: "Pro",
-      price: "$9",
+      price: "₹750",
       period: "per month",
       features: [
         "10GB Encrypted Storage",
